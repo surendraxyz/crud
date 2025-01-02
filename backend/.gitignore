@@ -1,0 +1,30 @@
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# OS-specific files
+.DS_Store        # macOS
+Thumbs.db        # Windows
+
+# Build and dist directories (for React)
+build/
+dist/
+
+# Package lock files if you use yarn (optional)
+yarn.lock
+
+# IDE/editor settings (optional)
+.vscode/
+.idea/
+
+# Coverage folder (if you use testing tools like Jest)
+coverage/
