@@ -24,6 +24,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CreateUser from "./CreateUser";
+import UpdateUser from "./UpdateUser";
+import UserDetails from "./UserDetails";
 
 const Container = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -94,8 +96,14 @@ const DataNotFound = styled(TableCell)(({ theme }) => ({
 }));
 
 function UserList() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState({
+    isId: "",
+    createModal: false,
+    updateModal: false,
+    detailsModal: false,
+  });
   const [searchTerm, setSearchTerm] = useState("");
+
   const data = [
     {
       name: "Hari",
@@ -204,11 +212,16 @@ function UserList() {
   return (
     <>
       <CreateUser open={open} setOpen={setOpen} />
+      <UpdateUser open={open} setOpen={setOpen} />
+      <UserDetails open={open} setOpen={setOpen} />
       <Container>
         <InnerContainer>
           <Header>
             <Title>User List</Title>
-            <SideIconButton variant="contained" onClick={() => setOpen(true)}>
+            <SideIconButton
+              variant="contained"
+              onClick={() => setOpen({ ...open, createModal: true })}
+            >
               <AddIcon sx={{ fontSize: "20px" }} />
             </SideIconButton>
           </Header>
@@ -277,13 +290,31 @@ function UserList() {
                               justifyContent="center"
                             >
                               <Tooltip title="View">
-                                <IconButton color="primary">
+                                <IconButton
+                                  color="primary"
+                                  onClick={() =>
+                                    setOpen({
+                                      ...open,
+                                      isId: index,
+                                      detailsModal: true,
+                                    })
+                                  }
+                                >
                                   <VisibilityIcon sx={{ fontSize: "16px" }} />
                                 </IconButton>
                               </Tooltip>
 
                               <Tooltip title="Edit">
-                                <IconButton color="success">
+                                <IconButton
+                                  color="success"
+                                  onClick={() =>
+                                    setOpen({
+                                      ...open,
+                                      isId: index,
+                                      updateModal: true,
+                                    })
+                                  }
+                                >
                                   <EditIcon sx={{ fontSize: "16px" }} />
                                 </IconButton>
                               </Tooltip>
