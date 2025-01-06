@@ -23,6 +23,7 @@ import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import CreateUser from "./CreateUser";
 
 const Container = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -93,6 +94,7 @@ const DataNotFound = styled(TableCell)(({ theme }) => ({
 }));
 
 function UserList() {
+  const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const data = [
     {
@@ -200,107 +202,112 @@ function UserList() {
   );
 
   return (
-    <Container>
-      <InnerContainer>
-        <Header>
-          <Title>User List</Title>
-          <SideIconButton variant="contained">
-            <AddIcon sx={{ fontSize: "20px" }} />
-          </SideIconButton>
-        </Header>
-        <BoxContainer elevation="2">
-          <Box sx={{ padding: "25px" }}>
-            <Grid2 container spacing={2}>
-              <Grid2 size={{ xs: 12, sm: 12, md: 9, lg: 9 }}>
-                <InputComponent
-                  type="text"
-                  placeholder="Search..."
-                  fullWidth
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+    <>
+      <CreateUser open={open} setOpen={setOpen} />
+      <Container>
+        <InnerContainer>
+          <Header>
+            <Title>User List</Title>
+            <SideIconButton variant="contained" onClick={() => setOpen(true)}>
+              <AddIcon sx={{ fontSize: "20px" }} />
+            </SideIconButton>
+          </Header>
+          <BoxContainer elevation="2">
+            <Box sx={{ padding: "25px" }}>
+              <Grid2 container spacing={2}>
+                <Grid2 size={{ xs: 12, sm: 12, md: 9, lg: 9 }}>
+                  <InputComponent
+                    type="text"
+                    placeholder="Search..."
+                    fullWidth
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </Grid2>
+                <Grid2 size={{ xs: 12, sm: 12, md: 3, lg: 3 }}>
+                  <SelectComponent fullWidth defaultValue={"none"}>
+                    <MenuItem value="none">Select Category</MenuItem>
+                    <MenuItem value="10">Bca</MenuItem>
+                    <MenuItem value="20">Mca</MenuItem>
+                    <MenuItem value="30">Mba</MenuItem>
+                  </SelectComponent>
+                </Grid2>
               </Grid2>
-              <Grid2 size={{ xs: 12, sm: 12, md: 3, lg: 3 }}>
-                <SelectComponent fullWidth defaultValue={"none"}>
-                  <MenuItem value="none">Select Category</MenuItem>
-                  <MenuItem value="10">Bca</MenuItem>
-                  <MenuItem value="20">Mca</MenuItem>
-                  <MenuItem value="30">Mba</MenuItem>
-                </SelectComponent>
-              </Grid2>
-            </Grid2>
-          </Box>
-          <TablemainContainer>
-            <Table>
-              <TableHead>
-                <TableHeadRow>
-                  <TableCellHead sx={{ width: "3%" }} align="center">
-                    #
-                  </TableCellHead>
-                  <TableCellHead sx={{ width: "15%" }}>Name</TableCellHead>
-                  <TableCellHead sx={{ width: "8%" }} align="center">
-                    Age
-                  </TableCellHead>
-                  <TableCellHead sx={{ width: "8%" }}>Class</TableCellHead>
-                  <TableCellHead sx={{ width: "15%" }}>Email</TableCellHead>
-                  <TableCellHead sx={{ width: "18%" }}>Address</TableCellHead>
-                  <TableCellHead sx={{ width: "8%" }} align="center">
-                    Action
-                  </TableCellHead>
-                </TableHeadRow>
-              </TableHead>
-              <TableBody>
-                {filterData.length === 0 ? (
-                  <TableRow>
-                    <DataNotFound colSpan={7} align="center">
-                      User Data Not Found...
-                    </DataNotFound>
-                  </TableRow>
-                ) : (
-                  filterData?.map((data, index) => {
-                    return (
-                      <TableRow key={index}>
-                        <TableCell align="center">{index + 1}</TableCell>
-                        <TableCell>{data.name}</TableCell>
-                        <TableCell align="center">{data.age}</TableCell>
-                        <TableCell>{data.className}</TableCell>
-                        <TableCell>{data.email}</TableCell>
-                        <TableCell>{data.address}</TableCell>
-                        <TableCell>
-                          <Stack
-                            direction="row"
-                            gap={1}
-                            justifyContent="center"
-                          >
-                            <Tooltip title="View">
-                              <IconButton color="primary">
-                                <VisibilityIcon sx={{ fontSize: "16px" }} />
-                              </IconButton>
-                            </Tooltip>
+            </Box>
+            <TablemainContainer>
+              <Table>
+                <TableHead>
+                  <TableHeadRow>
+                    <TableCellHead sx={{ width: "3%" }} align="center">
+                      #
+                    </TableCellHead>
+                    <TableCellHead sx={{ width: "15%" }}>Name</TableCellHead>
+                    <TableCellHead sx={{ width: "8%" }} align="center">
+                      Age
+                    </TableCellHead>
+                    <TableCellHead sx={{ width: "8%" }}>Class</TableCellHead>
+                    <TableCellHead sx={{ width: "15%" }}>Email</TableCellHead>
+                    <TableCellHead sx={{ width: "18%" }}>Address</TableCellHead>
+                    <TableCellHead sx={{ width: "8%" }} align="center">
+                      Action
+                    </TableCellHead>
+                  </TableHeadRow>
+                </TableHead>
+                <TableBody>
+                  {filterData.length === 0 ? (
+                    <TableRow>
+                      <DataNotFound colSpan={7} align="center">
+                        User Data Not Found...
+                      </DataNotFound>
+                    </TableRow>
+                  ) : (
+                    filterData?.map((data, index) => {
+                      return (
+                        <TableRow key={index}>
+                          <TableCell align="center">{index + 1}</TableCell>
+                          <TableCell>{data.name}</TableCell>
+                          <TableCell align="center">{data.age}</TableCell>
+                          <TableCell>{data.className}</TableCell>
+                          <TableCell>{data.email}</TableCell>
+                          <TableCell>{data.address}</TableCell>
+                          <TableCell>
+                            <Stack
+                              direction="row"
+                              gap={1}
+                              justifyContent="center"
+                            >
+                              <Tooltip title="View">
+                                <IconButton color="primary">
+                                  <VisibilityIcon sx={{ fontSize: "16px" }} />
+                                </IconButton>
+                              </Tooltip>
 
-                            <Tooltip title="Edit">
-                              <IconButton color="success">
-                                <EditIcon sx={{ fontSize: "16px" }} />
-                              </IconButton>
-                            </Tooltip>
+                              <Tooltip title="Edit">
+                                <IconButton color="success">
+                                  <EditIcon sx={{ fontSize: "16px" }} />
+                                </IconButton>
+                              </Tooltip>
 
-                            <Tooltip title="Delete">
-                              <IconButton color="error">
-                                <DeleteOutlineIcon sx={{ fontSize: "16px" }} />
-                              </IconButton>
-                            </Tooltip>
-                          </Stack>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </TablemainContainer>
-        </BoxContainer>
-      </InnerContainer>
-    </Container>
+                              <Tooltip title="Delete">
+                                <IconButton color="error">
+                                  <DeleteOutlineIcon
+                                    sx={{ fontSize: "16px" }}
+                                  />
+                                </IconButton>
+                              </Tooltip>
+                            </Stack>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </TablemainContainer>
+          </BoxContainer>
+        </InnerContainer>
+      </Container>
+    </>
   );
 }
 
