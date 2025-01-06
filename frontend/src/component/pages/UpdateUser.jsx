@@ -6,10 +6,10 @@ import {
   InputLabel,
   Modal,
   Stack,
-  styled,
   TextField,
   Typography,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -34,6 +34,7 @@ const Header = styled(Box)(({ theme }) => ({
   padding: "14px 24px",
   borderBottom: "1px solid #dfdfdf",
 }));
+
 const Footer = styled(Box)(({ theme }) => ({
   borderTop: "1px solid #dfdfdf",
   padding: "14px 24px",
@@ -75,7 +76,7 @@ const TextFieldComponent = styled(TextField)(({ theme }) => ({
   },
 }));
 
-function CreateUser({ open, setOpen }) {
+function UpdateUser({ open, setOpen }) {
   const [inpuData, setInputData] = useState({
     userName: "",
     age: "",
@@ -91,17 +92,16 @@ function CreateUser({ open, setOpen }) {
       [name]: value,
     });
   };
-
   return (
     <Modal
-      open={open.createModal}
+      open={open.updateModal}
       onClose={() => setOpen(false)}
       closeAfterTransition
     >
       <Container>
         <BoxContainer>
           <Header>
-            <Title>Create User</Title>
+            <Title>Update User</Title>
             <IconButton onClick={() => setOpen(false)}>
               <CloseIcon />
             </IconButton>
@@ -187,4 +187,4 @@ function CreateUser({ open, setOpen }) {
   );
 }
 
-export default CreateUser;
+export default UpdateUser;
