@@ -1,17 +1,36 @@
+import user from "../model/model.js";
+
 const create_user = async (req, res) => {
   try {
-    const { name, age, email } = req.body;
-    console.log(name, age, email);
+    const { name, age, email, className, address } = req.body;
+    const data = new user({ name, age, email, className, address });
+    await data.save();
+
+    res.status(201).json({
+      message: "User created successfully",
+      status: true,
+    });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      status: false,
+      message: error.message,
+    });
   }
 };
 
 const get_user = async (_, res) => {
   try {
-    res.send("hello surenda");
+    const data = await user.find();
+
+    res.status(200).json({
+      data: data,
+      status: true,
+    });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      status: false,
+      message: error.message,
+    });
   }
 };
 
