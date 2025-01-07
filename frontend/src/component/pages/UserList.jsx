@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -26,6 +26,8 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CreateUser from "./CreateUser";
 import UpdateUser from "./UpdateUser";
 import UserDetails from "./UserDetails";
+import { useDispatch, useSelector } from "react-redux";
+import userGet from "../../features/auth/userSlice";
 
 const Container = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -96,6 +98,7 @@ const DataNotFound = styled(TableCell)(({ theme }) => ({
 }));
 
 function UserList() {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState({
     isId: "",
     createModal: false,
@@ -103,6 +106,8 @@ function UserList() {
     detailsModal: false,
   });
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { user } = useSelector((state) => state.userSlice);
 
   const data = [
     {
@@ -208,6 +213,10 @@ function UserList() {
   const filterData = data?.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  useEffect(() => {
+    dispatch(userGet());
+  }, [dispatch]);
 
   return (
     <>
