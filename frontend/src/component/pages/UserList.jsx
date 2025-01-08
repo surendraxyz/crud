@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -7,6 +7,7 @@ import {
   MenuItem,
   Paper,
   Select,
+  Skeleton,
   Stack,
   Table,
   TableBody,
@@ -27,7 +28,7 @@ import CreateUser from "./CreateUser";
 import UpdateUser from "./UpdateUser";
 import UserDetails from "./UserDetails";
 import { useDispatch, useSelector } from "react-redux";
-import userGet from "../../features/auth/userSlice";
+import { userGet } from "../../features/user/userSlice";
 
 const Container = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -92,12 +93,13 @@ const TableHeadRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const DataNotFound = styled(TableCell)(({ theme }) => ({
-  height: "70vh",
+  height: "61.4vh",
   fontSize: "22px",
   fontWeight: 600,
 }));
 
 function UserList() {
+  const runFunction = useRef(false);
   const dispatch = useDispatch();
   const [open, setOpen] = useState({
     isId: "",
@@ -106,116 +108,22 @@ function UserList() {
     detailsModal: false,
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const { user } = useSelector((state) => state.userSlice);
+  const { usersData } = useSelector((state) => state.userSlice);
 
-  const data = [
-    {
-      name: "Hari",
-      age: 23,
-      className: "MCA",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Surendra",
-      age: 26,
-      className: "BCA",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Shubham Panday",
-      age: 23,
-      className: "MCA",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Satyam Raj Dwivedi",
-      age: 23,
-      className: "B.com",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Lucky Singh",
-      age: 23,
-      className: "MCA",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Shayam",
-      age: 23,
-      className: "MCA",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Ram Singh Parihar",
-      age: 23,
-      className: "MBA",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Hari",
-      age: 23,
-      className: "MCA",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Surendra",
-      age: 26,
-      className: "BCA",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Shubham Panday",
-      age: 23,
-      className: "MCA",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Satyam Raj Dwivedi",
-      age: 23,
-      className: "B.com",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Lucky Singh",
-      age: 23,
-      className: "MCA",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Shayam",
-      age: 23,
-      className: "MCA",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-    {
-      name: "Ram Singh Parihar",
-      age: 23,
-      className: "MBA",
-      email: "info@gmail.com",
-      address: "surat, Gujarat",
-    },
-  ];
-
-  const filterData = data?.filter((item) =>
+  const filterData = usersData?.users?.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   useEffect(() => {
-    dispatch(userGet());
+    if (!runFunction.current) {
+      setTimeout(() => {
+        setLoading(false);
+        dispatch(userGet());
+      }, 1000);
+      runFunction.current = true;
+    }
   }, [dispatch]);
 
   return (
@@ -276,70 +184,107 @@ function UserList() {
                   </TableHeadRow>
                 </TableHead>
                 <TableBody>
-                  {filterData.length === 0 ? (
+                  {loading ? (
+                    Array.from({ length: 10 }).map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton variant="text" width={50} />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton variant="text" width={200} />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton
+                            variant="text"
+                            width={50}
+                            sx={{ margin: "auto" }}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton variant="text" width={150} />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton variant="text" width={200} />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton variant="text" width={300} />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton
+                            variant="circle"
+                            width={20}
+                            height={20}
+                            sx={{ margin: "auto" }}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : filterData?.length > 0 ? (
+                    filterData?.map((data, index) => (
+                      <TableRow key={index}>
+                        <TableCell align="center">{index + 1}</TableCell>
+                        <TableCell sx={{ textTransform: "capitalize" }}>
+                          {data.name}
+                        </TableCell>
+                        <TableCell align="center">{data.age}</TableCell>
+                        <TableCell sx={{ textTransform: "capitalize" }}>
+                          {data.className}
+                        </TableCell>
+                        <TableCell>{data.email}</TableCell>
+                        <TableCell sx={{ textTransform: "capitalize" }}>
+                          {data.address}
+                        </TableCell>
+                        <TableCell>
+                          <Stack
+                            direction="row"
+                            gap={1}
+                            justifyContent="center"
+                          >
+                            <Tooltip title="View">
+                              <IconButton
+                                color="primary"
+                                onClick={() =>
+                                  setOpen({
+                                    ...open,
+                                    isId: index,
+                                    detailsModal: true,
+                                  })
+                                }
+                              >
+                                <VisibilityIcon sx={{ fontSize: "16px" }} />
+                              </IconButton>
+                            </Tooltip>
+
+                            <Tooltip title="Edit">
+                              <IconButton
+                                color="success"
+                                onClick={() =>
+                                  setOpen({
+                                    ...open,
+                                    isId: index,
+                                    updateModal: true,
+                                  })
+                                }
+                              >
+                                <EditIcon sx={{ fontSize: "16px" }} />
+                              </IconButton>
+                            </Tooltip>
+
+                            <Tooltip title="Delete">
+                              <IconButton color="error">
+                                <DeleteOutlineIcon sx={{ fontSize: "16px" }} />
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
                     <TableRow>
                       <DataNotFound colSpan={7} align="center">
-                        User Data Not Found...
+                        No User Data Found...
                       </DataNotFound>
                     </TableRow>
-                  ) : (
-                    filterData?.map((data, index) => {
-                      return (
-                        <TableRow key={index}>
-                          <TableCell align="center">{index + 1}</TableCell>
-                          <TableCell>{data.name}</TableCell>
-                          <TableCell align="center">{data.age}</TableCell>
-                          <TableCell>{data.className}</TableCell>
-                          <TableCell>{data.email}</TableCell>
-                          <TableCell>{data.address}</TableCell>
-                          <TableCell>
-                            <Stack
-                              direction="row"
-                              gap={1}
-                              justifyContent="center"
-                            >
-                              <Tooltip title="View">
-                                <IconButton
-                                  color="primary"
-                                  onClick={() =>
-                                    setOpen({
-                                      ...open,
-                                      isId: index,
-                                      detailsModal: true,
-                                    })
-                                  }
-                                >
-                                  <VisibilityIcon sx={{ fontSize: "16px" }} />
-                                </IconButton>
-                              </Tooltip>
-
-                              <Tooltip title="Edit">
-                                <IconButton
-                                  color="success"
-                                  onClick={() =>
-                                    setOpen({
-                                      ...open,
-                                      isId: index,
-                                      updateModal: true,
-                                    })
-                                  }
-                                >
-                                  <EditIcon sx={{ fontSize: "16px" }} />
-                                </IconButton>
-                              </Tooltip>
-
-                              <Tooltip title="Delete">
-                                <IconButton color="error">
-                                  <DeleteOutlineIcon
-                                    sx={{ fontSize: "16px" }}
-                                  />
-                                </IconButton>
-                              </Tooltip>
-                            </Stack>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })
                   )}
                 </TableBody>
               </Table>
