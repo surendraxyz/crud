@@ -12,6 +12,9 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import { useDispatch } from "react-redux";
+import { createUser } from "../../features/user/userSlice";
+import { setAlertMessage } from "../../features/alert message/alertSlice";
 
 const Container = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -76,6 +79,7 @@ const TextFieldComponent = styled(TextField)(({ theme }) => ({
 }));
 
 function CreateUser({ open, setOpen }) {
+  const dispatch = useDispatch();
   const [inpuData, setInputData] = useState({
     userName: "",
     age: "",
@@ -92,6 +96,40 @@ function CreateUser({ open, setOpen }) {
     });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      name: inpuData.userName,
+      age: inpuData.age,
+      email: inpuData.email,
+      className: inpuData.className,
+      address: inpuData.address,
+    };
+
+    try {
+      const response = await dispatch(createUser(data)).unwrap();
+      if (response.status === 201) {
+        dispatch(
+          setAlertMessage({
+            status: "success",
+            open: true,
+            message: response.data.message,
+          })
+        );
+      }
+      setOpen({ ...open, createModal: false });
+    } catch (error) {
+      dispatch(
+        setAlertMessage({
+          status: "error",
+          open: true,
+          message: error.data.message,
+        })
+      );
+    }
+  };
+
   return (
     <Modal
       open={open.createModal}
@@ -102,11 +140,13 @@ function CreateUser({ open, setOpen }) {
         <BoxContainer>
           <Header>
             <Title>Create User</Title>
-            <IconButton onClick={() => setOpen(false)}>
+            <IconButton
+              onClick={() => setOpen({ ...open, createModal: false })}
+            >
               <CloseIcon />
             </IconButton>
           </Header>
-          <Form component="form">
+          <Form component="form" onSubmit={handleSubmit}>
             <BodyContainer>
               <Grid2 container spacing={2}>
                 <Grid2 size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>

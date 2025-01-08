@@ -8,6 +8,7 @@ const create_user = async (req, res) => {
 
     res.status(201).json({
       message: "User created successfully",
+      users: data,
       status: true,
     });
   } catch (error) {
@@ -23,8 +24,8 @@ const get_user = async (_, res) => {
     const data = await user.find();
 
     res.status(200).json({
-      data: data,
       status: true,
+      users: data,
     });
   } catch (error) {
     res.status(500).json({

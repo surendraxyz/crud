@@ -95,7 +95,7 @@ function UpdateUser({ open, setOpen }) {
   return (
     <Modal
       open={open.updateModal}
-      onClose={() => setOpen(false)}
+      onClose={() => setOpen({ ...open, updateModal: false })}
       closeAfterTransition
     >
       <Container>
